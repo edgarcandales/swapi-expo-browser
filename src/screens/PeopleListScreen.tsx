@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { FlatList, ListRenderItemInfo, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, Pressable, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
@@ -9,6 +9,8 @@ import { Card } from '../components/Card';
 import { EmptyState } from '../components/EmptyState';
 import { ErrorState } from '../components/ErrorState';
 import { Loader } from '../components/Loader';
+import { Screen } from '../components/Screen';
+import { Text } from '../components/Text';
 import { usePeopleList } from '../hooks/usePeople';
 import { RootStackParamList } from '../navigation/RootNavigator';
 import { queryKeys } from '../state/queryKeys';
@@ -77,7 +79,7 @@ export function PeopleListScreen() {
       onPress={() => onPersonPress(item)}
       style={({ pressed }) => [styles.cardWrapper, pressed && styles.cardPressed]}
     >
-      <Card>
+      <Card elevated>
         <Text style={styles.title}>{item.name}</Text>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Birth year</Text>
@@ -132,29 +134,34 @@ export function PeopleListScreen() {
   }
 
   return (
-    <FlatList
-      contentContainerStyle={styles.listContent}
-      data={people}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={renderPerson}
-      onEndReached={() => {
-        if (hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      }}
-      onEndReachedThreshold={0.4}
-      refreshing={isRefetching}
-      onRefresh={refetch}
-      ListFooterComponent={renderFooter}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
-      accessibilityLabel={`People list (${people.length} items)`}
-    />
+    <Screen>
+      <FlatList
+        contentContainerStyle={styles.listContent}
+        data={people}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderPerson}
+        onEndReached={() => {
+          if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.4}
+        refreshing={isRefetching}
+        onRefresh={refetch}
+        ListFooterComponent={renderFooter}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListFooterComponentStyle={styles.footerContainer}
+        showsVerticalScrollIndicator={false}
+        accessibilityLabel={`People list (${people.length} items)`}
+      />
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   listContent: {
     paddingVertical: theme.spacing.lg,
+    paddingBottom: theme.spacing.xl,
   },
   cardWrapper: {
     borderRadius: theme.radius.lg,
@@ -183,6 +190,9 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: 'center',
     paddingVertical: theme.spacing.md,
+  },
+  footerContainer: {
+    paddingBottom: theme.spacing.lg,
   },
   footerText: {
     color: theme.colors.muted,

@@ -3,8 +3,14 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { theme } from '../theme';
 
-export function Card({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
-  return <View style={[styles.card, style]}>{children}</View>;
+export interface CardProps {
+  children: ReactNode;
+  style?: StyleProp<ViewStyle>;
+  elevated?: boolean;
+}
+
+export function Card({ children, style, elevated = false }: CardProps) {
+  return <View style={[styles.card, elevated && styles.elevated, style]}>{children}</View>;
 }
 
 const styles = StyleSheet.create({
@@ -14,5 +20,12 @@ const styles = StyleSheet.create({
     padding: theme.spacing.lg,
     borderWidth: 1,
     borderColor: theme.colors.border,
+  },
+  elevated: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 6,
+    elevation: 4,
   },
 });

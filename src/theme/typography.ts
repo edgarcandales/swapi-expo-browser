@@ -13,12 +13,6 @@ export const typography = {
     fontWeight: '700' as const,
     color: colors.textPrimary,
   },
-  subtitle: {
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '700' as const,
-    color: colors.textPrimary,
-  },
   body: {
     fontSize: 14,
     lineHeight: 20,
@@ -30,22 +24,11 @@ export const typography = {
     fontWeight: '600' as const,
     color: colors.textPrimary,
   },
-  caption: {
-    fontSize: 12,
-    lineHeight: 16,
-    color: colors.muted,
-  },
-  label: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: '600' as const,
-    color: colors.textPrimary,
-  },
   button: {
     fontSize: 15,
     lineHeight: 20,
     fontWeight: '700' as const,
-    color: colors.background,
+    color: colors.textPrimary,
   },
 };
 
