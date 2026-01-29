@@ -39,7 +39,8 @@ interface FetchConfig extends FetchOptions {
 }
 
 const DEFAULT_TIMEOUT_MS = 10_000;
-const DEFAULT_BASE_URL = 'https://swapi.dev/api';
+export const DEFAULT_BASE_URL = 'https://swapi.dev/api';
+const FALLBACK_BASE_URL = 'https://swapi.py4e.com/api';
 
 function buildError(kind: ApiErrorKind, message: string, cause?: unknown, status?: number): ApiError {
   const error = new Error(message) as ApiError;
@@ -98,32 +99,62 @@ async function fetchJson<T>(path: string, config: FetchConfig): Promise<T> {
   }
 }
 
+async function fetchWithFallback<T>(
+  path: string,
+  config: FetchConfig,
+  fallbackBaseUrl?: string,
+): Promise<T> {
+  try {
+    return await fetchJson<T>(path, config);
+  } catch (primaryErr) {
+    const isRetryable =
+      (primaryErr as ApiError).kind !== 'server' && (primaryErr as ApiError).kind !== 'parse';
+
+    if (!fallbackBaseUrl || !isRetryable || fallbackBaseUrl === config.baseUrl) {
+      throw primaryErr;
+    }
+
+    try {
+      return await fetchJson<T>(path, { ...config, baseUrl: fallbackBaseUrl });
+    } catch (fallbackErr) {
+      const error = buildError(
+        (fallbackErr as ApiError).kind ?? 'network',
+        'Primary and fallback SWAPI endpoints failed',
+        { primary: primaryErr, fallback: fallbackErr },
+        (fallbackErr as ApiError).status,
+      );
+      throw error;
+    }
+  }
+}
+
 export function createSwapiClient(
   baseUrl: string = DEFAULT_BASE_URL,
   fetchImpl: typeof fetch = fetch,
+  fallbackBaseUrl?: string,
 ): SwapiClient {
   return {
     async getPeoplePage(page = 1): Promise<PeoplePage> {
-      const data = await fetchJson<PeoplePageDto>(`/people/?page=${page}`, {
+      const data = await fetchWithFallback<PeoplePageDto>(`/people/?page=${page}`, {
         baseUrl,
         fetchImpl,
-      });
+      }, fallbackBaseUrl);
       return mapPeoplePage(data);
     },
 
     async getPerson(id: number): Promise<Person> {
-      const data = await fetchJson<PersonDto>(`/people/${id}/`, {
+      const data = await fetchWithFallback<PersonDto>(`/people/${id}/`, {
         baseUrl,
         fetchImpl,
-      });
+      }, fallbackBaseUrl);
       return mapPerson(data);
     },
 
     async getPlanet(id: number): Promise<Planet> {
-      const data = await fetchJson<PlanetDto>(`/planets/${id}/`, {
+      const data = await fetchWithFallback<PlanetDto>(`/planets/${id}/`, {
         baseUrl,
         fetchImpl,
-      });
+      }, fallbackBaseUrl);
       return mapPlanet(data);
     },
 
@@ -131,7 +162,9 @@ export function createSwapiClient(
       if (ids.length === 0) return [];
       const results = await Promise.all(
         ids.map((filmId) =>
-          fetchJson<FilmDto>(`/films/${filmId}/`, { baseUrl, fetchImpl }).then(mapFilm),
+          fetchWithFallback<FilmDto>(`/films/${filmId}/`, { baseUrl, fetchImpl }, fallbackBaseUrl).then(
+            mapFilm,
+          ),
         ),
       );
       return results;
@@ -139,4 +172,4 @@ export function createSwapiClient(
   };
 }
 
-export const swapiClient: SwapiClient = createSwapiClient();
+export const swapiClient: SwapiClient = createSwapiClient(DEFAULT_BASE_URL, fetch, FALLBACK_BASE_URL);

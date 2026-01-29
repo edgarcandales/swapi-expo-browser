@@ -34,5 +34,6 @@ npm test              # jest + @testing-library/react-native
 - React Query handles caching, retries, and pagination; no custom global state beyond injectable client for testability.
 - Runtime validation uses `zod` to guard against malformed API data.
 - Detail screen fetches related resources (homeworld, films) lazily and tolerates partial failures while showing inline error hints.
+- SWAPI client now falls back to `https://swapi.py4e.com/api` for retryable failures and exposes typed query keys for better cache reuse/prefetch.
 
 # swapi-expo-browser

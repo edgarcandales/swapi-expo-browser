@@ -55,4 +55,38 @@ describe('swapiClient', () => {
 
     await expect(client.getPerson(1)).rejects.toMatchObject({ kind: 'network' });
   });
+
+  it('falls back to secondary base url on retryable failure', async () => {
+    const fetchStub = jest.fn(
+      async (input: RequestInfo | URL) =>
+        new Promise((resolve, reject) => {
+          const url = input.toString();
+          if (url.startsWith('https://swapi.dev')) {
+            reject(new Error('primary down'));
+            return;
+          }
+          resolve(
+            new Response(JSON.stringify(peoplePayload), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' },
+            }),
+          );
+        }),
+    ) as unknown as typeof fetch;
+
+    const client = createSwapiClient('https://swapi.dev/api', fetchStub, 'https://swapi.py4e.com/api');
+    const result = await client.getPeoplePage(1);
+
+    expect(fetchStub).toHaveBeenCalledTimes(2);
+    expect(fetchStub).toHaveBeenLastCalledWith('https://swapi.py4e.com/api/people/?page=1', expect.anything());
+    expect(result.people[0].name).toBe('Leia Organa');
+  });
+
+  it('does not retry on server errors', async () => {
+    const fetchStub = buildFetchStub({ error: 'fail' }, 500);
+    const client = createSwapiClient('https://swapi.dev/api', fetchStub, 'https://swapi.py4e.com/api');
+
+    await expect(client.getPeoplePage(1)).rejects.toMatchObject({ kind: 'server', status: 500 });
+    expect(fetchStub).toHaveBeenCalledTimes(1);
+  });
 });
