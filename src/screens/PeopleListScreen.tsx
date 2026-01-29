@@ -13,8 +13,7 @@ import { usePeopleList } from '../hooks/usePeople';
 import { RootStackParamList } from '../navigation/RootNavigator';
 import { queryKeys } from '../state/queryKeys';
 import { useSwapiClient } from '../state/SwapiClientContext';
-import { colors } from '../theme/colors';
-import { spacing } from '../theme/spacing';
+import { theme } from '../theme';
 import { describeError } from '../utils/errors';
 
 type Navigation = NativeStackNavigationProp<RootStackParamList, 'PeopleList'>;
@@ -155,42 +154,37 @@ export function PeopleListScreen() {
 
 const styles = StyleSheet.create({
   listContent: {
-    paddingVertical: spacing.lg,
+    paddingVertical: theme.spacing.lg,
   },
   cardWrapper: {
-    borderRadius: 12,
+    borderRadius: theme.radius.lg,
   },
   cardPressed: {
     opacity: 0.92,
   },
   title: {
-    color: colors.textPrimary,
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: spacing.sm,
+    ...theme.typography.title,
+    marginBottom: theme.spacing.sm,
   },
   metaRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: spacing.xs,
+    marginBottom: theme.spacing.xs,
   },
   metaLabel: {
-    color: colors.textSecondary,
-    fontSize: 14,
+    ...theme.typography.body,
   },
   metaValue: {
-    color: colors.textPrimary,
-    fontWeight: '600',
-    fontSize: 14,
+    ...theme.typography.bodyStrong,
   },
   separator: {
-    height: spacing.md,
+    height: theme.spacing.md,
   },
   footer: {
     alignItems: 'center',
-    paddingVertical: spacing.md,
+    paddingVertical: theme.spacing.md,
   },
   footerText: {
-    color: colors.muted,
+    color: theme.colors.muted,
   },
 });

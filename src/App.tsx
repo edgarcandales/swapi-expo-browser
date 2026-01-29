@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootNavigator } from './navigation/RootNavigator';
 import { AppQueryClientProvider } from './state/queryClient';
 import { SwapiClientProvider } from './state/SwapiClientContext';
-import { colors } from './theme/colors';
+import { theme } from './theme';
 
 export default function App() {
   return (
@@ -13,7 +13,7 @@ export default function App() {
       <AppQueryClientProvider>
         <SwapiClientProvider>
           <RootNavigator />
-          <StatusBar style="light" backgroundColor={colors.surface} />
+          <StatusBar style="light" backgroundColor={theme.colors.surface} />
         </SwapiClientProvider>
       </AppQueryClientProvider>
     </SafeAreaProvider>

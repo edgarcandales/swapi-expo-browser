@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors } from '../theme/colors';
-import { spacing } from '../theme/spacing';
+import { theme } from '../theme';
 import { Button } from './Button';
 
 export interface ErrorStateProps {
@@ -24,18 +23,17 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: spacing.lg,
+    padding: theme.spacing.lg,
   },
   title: {
-    color: colors.textPrimary,
-    fontWeight: '700',
-    fontSize: 18,
-    marginBottom: spacing.xs,
+    ...theme.typography.title,
+    marginBottom: theme.spacing.xs,
   },
   message: {
-    color: colors.textSecondary,
+    color: theme.colors.textSecondary,
     textAlign: 'center',
-    fontSize: 14,
-    marginBottom: spacing.sm,
+    fontSize: theme.typography.body.fontSize,
+    lineHeight: theme.typography.body.lineHeight,
+    marginBottom: theme.spacing.sm,
   },
 });

@@ -8,8 +8,7 @@ import { InfoRow } from '../components/InfoRow';
 import { Loader } from '../components/Loader';
 import { usePersonDetails } from '../hooks/usePersonDetails';
 import { RootStackParamList } from '../navigation/RootNavigator';
-import { colors } from '../theme/colors';
-import { spacing } from '../theme/spacing';
+import { theme } from '../theme';
 import { describeError } from '../utils/errors';
 import { displayOrFallback, formatList, formatNumber } from '../utils/format';
 
@@ -88,32 +87,27 @@ export function PersonDetailScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    paddingVertical: spacing.lg,
+    paddingVertical: theme.spacing.lg,
   },
   cardSpacing: {
-    marginBottom: spacing.lg,
+    marginBottom: theme.spacing.lg,
   },
   name: {
-    color: colors.textPrimary,
-    fontSize: 22,
-    fontWeight: '800',
-    marginBottom: spacing.sm,
+    ...theme.typography.heading,
+    marginBottom: theme.spacing.sm,
   },
   section: {
-    marginTop: spacing.xs,
+    marginTop: theme.spacing.xs,
   },
   sectionTitle: {
-    color: colors.textPrimary,
-    fontSize: 16,
-    fontWeight: '700',
-    marginBottom: spacing.sm,
+    ...theme.typography.subtitle,
+    marginBottom: theme.spacing.sm,
   },
   bodyText: {
-    color: colors.textSecondary,
-    fontSize: 14,
+    ...theme.typography.body,
   },
   inlineError: {
-    color: colors.error,
-    marginTop: spacing.sm,
+    color: theme.colors.error,
+    marginTop: theme.spacing.sm,
   },
 });

@@ -1,12 +1,12 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-import { colors } from '../theme/colors';
+import { theme } from '../theme';
 
 export function Loader() {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color={colors.accent} />
+      <ActivityIndicator size="large" color={theme.colors.accent} />
     </View>
   );
 }

@@ -2,10 +2,9 @@ import React from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { colors } from '../theme/colors';
-import { spacing } from '../theme/spacing';
 import { PeopleListScreen } from '../screens/PeopleListScreen';
 import { PersonDetailScreen } from '../screens/PersonDetailScreen';
+import { theme } from '../theme';
 
 export type RootStackParamList = {
   PeopleList: undefined;
@@ -18,11 +17,11 @@ const navTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: colors.background,
-    card: colors.surface,
-    border: colors.border,
-    text: colors.textPrimary,
-    primary: colors.accent,
+    background: theme.colors.background,
+    card: theme.colors.surface,
+    border: theme.colors.border,
+    text: theme.colors.textPrimary,
+    primary: theme.colors.accent,
   },
 };
 
@@ -32,9 +31,9 @@ export function RootNavigator() {
       <Stack.Navigator
         initialRouteName="PeopleList"
         screenOptions={{
-          headerStyle: { backgroundColor: colors.surface },
-          headerTintColor: colors.textPrimary,
-          contentStyle: { backgroundColor: colors.background, paddingHorizontal: spacing.lg },
+          headerStyle: { backgroundColor: theme.colors.surface },
+          headerTintColor: theme.colors.textPrimary,
+          contentStyle: { backgroundColor: theme.colors.background, paddingHorizontal: theme.spacing.lg },
         }}
       >
         <Stack.Screen name="PeopleList" component={PeopleListScreen} options={{ title: 'People' }} />

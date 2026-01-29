@@ -1,8 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
-import { colors } from '../theme/colors';
-import { spacing } from '../theme/spacing';
+import { theme } from '../theme';
 
 export type ButtonVariant = 'primary' | 'ghost';
 
@@ -30,30 +29,28 @@ export function Button({ label, onPress, variant = 'primary' }: ButtonProps) {
 
 const styles = StyleSheet.create({
   base: {
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.lg,
-    borderRadius: 8,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.radius.md,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
   },
   primary: {
-    backgroundColor: colors.accent,
-    borderColor: colors.accent,
+    backgroundColor: theme.colors.accent,
+    borderColor: theme.colors.accent,
   },
   ghost: {
     backgroundColor: 'transparent',
-    borderColor: colors.border,
+    borderColor: theme.colors.border,
   },
   pressed: {
     opacity: 0.85,
   },
   label: {
-    color: '#0b1021',
-    fontWeight: '700',
-    fontSize: 15,
+    ...theme.typography.button,
   },
   ghostLabel: {
-    color: colors.textPrimary,
+    color: theme.colors.textPrimary,
   },
 });
